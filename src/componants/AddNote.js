@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function AddNote() {
   const [note, setNote] = useState({ title: "", description: "", tag: "" });
-  const context = useContext(noteContext);
-  const { addNote } = context; // ✅ FIXED: was addnote
+  const { addNote, getAllNotes } = useContext(noteContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,13 +16,13 @@ function AddNote() {
   const handleClick = async (e) => {
     e.preventDefault();
 
-    if (!localStorage.getItem("token")) {
-      navigate("/login");
-      return;
-    }
+    if (!note.title || !note.description) return;
 
-    await addNote(note.title, note.description, note.tag); // ✅ FIXED
+    await addNote(note.title, note.description, note.tag);
     setNote({ title: "", description: "", tag: "" });
+
+    // optional: refresh notes list to get full data
+    await getAllNotes();
   };
 
   const onChange = (e) => {
@@ -84,7 +83,7 @@ function AddNote() {
                     name="tag"
                     value={note.tag}
                     onChange={onChange}
-                    placeholder="Optional tag (e.g., Work, Personal)"
+                    placeholder="Optional tag"
                   />
                 </div>
 
@@ -93,7 +92,7 @@ function AddNote() {
                     type="submit"
                     className="btn btn-dark btn-lg"
                     onClick={handleClick}
-                    disabled={note.title.length < 6 || note.description.length < 10}
+                    disabled={note.title.length < 3 || note.description.length < 5}
                   >
                     + Add Note
                   </button>

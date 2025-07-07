@@ -28,7 +28,12 @@ const NoteState = (props) => {
         return;
       }
 
-      setNotes(json);
+      const sanitizedNotes = json.map((note, index) => ({
+        ...note,
+        _id: note._id || `fallback-id-${index}`,
+      }));
+
+      setNotes(sanitizedNotes);
     } catch (error) {
       console.error("❌ Failed to fetch notes:", error.message);
     }
@@ -49,7 +54,13 @@ const NoteState = (props) => {
       });
 
       const json = await response.json();
-      setNotes((prevNotes) => [...prevNotes, json]);
+
+      // If backend does not return the full note, fallback to refresh
+      if (!json || !json._id) {
+        await getAllNotes();
+      } else {
+        setNotes((prevNotes) => [...prevNotes, json]);
+      }
     } catch (error) {
       console.error("❌ Failed to add note:", error.message);
     }
@@ -103,7 +114,7 @@ const NoteState = (props) => {
     if (getToken()) {
       getAllNotes();
     }
-  }, [getAllNotes]);
+  });
 
   return (
     <NoteContext.Provider

@@ -158,7 +158,9 @@ function Notes() {
 
         {Array.isArray(notes) &&
           notes.map((note) => (
-            <NoteItem key={note._id} note={note} updatenote={updateNote} />
+            <div className="col-md-3" key={note._id}>
+              <NoteItem note={note} updatenote={updateNote} />
+            </div>
           ))}
       </div>
     </>
