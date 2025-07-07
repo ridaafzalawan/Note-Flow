@@ -25,7 +25,7 @@ function Notes() {
   }, [getAllNotes]);
 
   const updateNote = (currentNote) => {
-    ref.current.click(); // Open modal
+    ref.current.click();
     setNote({
       id: currentNote._id,
       etitle: currentNote.title,
@@ -37,7 +37,7 @@ function Notes() {
   const handleClick = (e) => {
     e.preventDefault();
     editNote(note.id, note.etitle, note.edescription, note.etag);
-    refClose.current.click(); // Close modal
+    refClose.current.click();
   };
 
   const onChange = (e) => {
@@ -148,21 +148,24 @@ function Notes() {
         </div>
       </div>
 
-      {/* Notes Display */}
-      <div className="row my-3 p-4 text-white rounded-3">
-        <h1 className="text-success mb-4">Your Notes</h1>
+     {/* Notes Display */}
+<div className="container my-4">
+  <h2 className="text-success mb-4">Your Notes</h2>
 
-        {Array.isArray(notes) && notes.length === 0 && (
-          <p className="text-muted">No notes to display</p>
-        )}
+  {Array.isArray(notes) && notes.length === 0 && (
+    <p className="text-muted">No notes to display</p>
+  )}
 
-        {Array.isArray(notes) &&
-          notes.map((note) => (
-            <div className="col-md-3" key={note._id}>
-              <NoteItem note={note} updatenote={updateNote} />
-            </div>
-          ))}
-      </div>
+  <div className="row">
+    {Array.isArray(notes) &&
+      notes.map((note) => (
+        <div className="col-md-4 mb-4" key={note._id}>
+  <NoteItem note={note} updatenote={updateNote} />
+</div>
+      ))}
+  </div>
+</div>
+
     </>
   );
 }
