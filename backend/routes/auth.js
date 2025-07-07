@@ -1,12 +1,12 @@
 const express = require('express');
-const User = require('../models/user');
+const User = require('../models/User');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const fetchuser = require('../middleware/fetchuser');
 
-const JWT_SECRET = "RIDA_IS_A_JZSIOSDNMNJKXDFJDJJIIDFKMNDFNMJISDJNS";
+const JWT_SECRET = "JZSIOSDNMNJKXDFJDJJIIDFKMNDFNMJISDJNS";
 
 // Route 1 : Create a user using POST: "/api/auth/createuser"
 router.post(

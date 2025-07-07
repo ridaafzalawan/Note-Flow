@@ -5,10 +5,9 @@ import { useNavigate } from "react-router-dom";
 function AddNote() {
   const [note, setNote] = useState({ title: "", description: "", tag: "" });
   const context = useContext(noteContext);
-  const { addnote } = context;
+  const { addNote } = context; // ✅ FIXED: was addnote
   const navigate = useNavigate();
 
-  // 🔐 Redirect to login if not authenticated
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       navigate("/login");
@@ -23,7 +22,7 @@ function AddNote() {
       return;
     }
 
-    await addnote(note.title, note.description, note.tag);
+    await addNote(note.title, note.description, note.tag); // ✅ FIXED
     setNote({ title: "", description: "", tag: "" });
   };
 

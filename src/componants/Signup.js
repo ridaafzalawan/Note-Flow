@@ -39,10 +39,9 @@ function Signup() {
       const json = await response.json();
       console.log(json); // Debug: View response
 
-      if (json.success && json.authtoken) {
+      if (json.authtoken) {
         localStorage.setItem("token", json.authtoken);
-        localStorage.setItem("name", json.name); // ✅ Store user name
-        navigate("/home"); // ✅ Redirect after successful signup
+        navigate("/home"); // Redirect to notes page
       } else {
         alert("Signup failed. " + (json.error || "Please try again."));
       }

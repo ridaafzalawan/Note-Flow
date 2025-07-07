@@ -5,18 +5,20 @@ const Notes = require('../models/Notes');
 const { body, validationResult } = require('express-validator');
 
 // ✅ Fetch all notes
+// Route 1: Get all notes for the logged-in user
 router.get('/fetchallnotes', fetchuser, async (req, res) => {
   try {
-    const notes = await Notes.find({ user: req.user.id });
-    res.json({ success: true, notes });
+    const notes = await Notes.find({ user: req.user.id }); // ✅ Only user's notes
+    res.json(notes);
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ success: false, error: "Internal Server Error" });
+    res.status(500).send("Internal Server Error");
   }
 });
 
-// ✅ Add note
-router.post('/addnote', fetchuser,
+router.post(
+  '/addnote',
+  fetchuser,
   [
     body('title', 'Enter a valid title').isLength({ min: 3 }),
     body('description', 'Description must be at least 5 characters').isLength({ min: 5 })
@@ -31,18 +33,23 @@ router.post('/addnote', fetchuser,
       const { title, description, tag } = req.body;
 
       const note = new Notes({
-        title, description, tag, user: req.user.id
+        title,
+        description,
+        tag,
+        user: req.user.id
       });
 
       const savedNote = await note.save();
+      console.log("✅ Note saved:", savedNote);
       res.json({ success: true, savedNote });
-
     } catch (error) {
       console.error(error.message);
-      res.status(500).json({ success: false, error: "Internal Server Error" });
+      res.status(500).json({ success: false, message: "Internal Server Error" });
     }
   }
 );
+
+// ✅ Add note
 
 // ✅ Update note
 router.put('/updatenote/:id', fetchuser, async (req, res) => {

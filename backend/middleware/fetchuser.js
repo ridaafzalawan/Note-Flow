@@ -2,10 +2,10 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = "JZSIOSDNMNJKXDFJDJJIIDFKMNDFNMJISDJNS";
 
 const fetchuser = (req, res, next) => {
-  // Get user from JWT token and add id to req object
+  // ✅ Correct header key:
   const token = req.header('auth-token');
   if (!token) {
-    return res.status(401).json({ error: "Please authenticate using a valid token" });
+    return res.status(401).json({ success: false, error: "Access denied: No token provided" });
   }
 
   try {
@@ -13,7 +13,7 @@ const fetchuser = (req, res, next) => {
     req.user = data.user;
     next();
   } catch (error) {
-    res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ success: false, error: "Access denied: Invalid token" });
   }
 };
 

@@ -7,15 +7,18 @@ const Navbar = () => {
 
   const [userName, setUserName] = useState("");
 
+  const isActive = (path) => (location.pathname === path ? "active" : "");
+
   useEffect(() => {
+    // Fetch username from localStorage if logged in
     const token = localStorage.getItem("token");
-    const name = localStorage.getItem("name");
+    const name = localStorage.getItem("name"); // Assuming you're storing it
     if (token && name) {
       setUserName(name);
     } else {
       setUserName("");
     }
-  }, [location.pathname]); // run when page/path changes
+  }, [location]); // re-run when route changes
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -24,19 +27,21 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  const isActive = (path) => (location.pathname === path ? "active" : "");
-
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-black">
       <div className="container-fluid">
         <Link className="navbar-brand text-success" to="/">
           {userName ? `${userName}'s Notebook` : "Your Notebook"}
         </Link>
+
         <button
           className="navbar-toggler"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon" />
         </button>
@@ -47,6 +52,7 @@ const Navbar = () => {
               <Link
                 to="/home"
                 className={`nav-link ${isActive("/home")}`}
+                aria-current={isActive("/home") ? "page" : undefined}
               >
                 Home
               </Link>
@@ -55,6 +61,7 @@ const Navbar = () => {
               <Link
                 to="/about"
                 className={`nav-link ${isActive("/about")}`}
+                aria-current={isActive("/about") ? "page" : undefined}
               >
                 About
               </Link>

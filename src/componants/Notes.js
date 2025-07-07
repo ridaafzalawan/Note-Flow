@@ -10,30 +10,34 @@ function Notes() {
     edescription: "",
     etag: "",
   });
-  const context = useContext(noteContext);
-  const { notes, getallnotes, editnote } = context;
 
-  useEffect(() => {
-    getallnotes();
-  });
+  const context = useContext(noteContext);
+  const { notes, getAllNotes, editNote } = context;
 
   const ref = useRef(null);
   const refClose = useRef(null);
 
-  const updatenote = (currentnote) => {
-    ref.current.click();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      getAllNotes();
+    }
+  }, [getAllNotes]);
+
+  const updateNote = (currentNote) => {
+    ref.current.click(); // Open modal
     setNote({
-      id: currentnote._id,
-      etitle: currentnote.title,
-      edescription: currentnote.description,
-      etag: currentnote.tag,
+      id: currentNote._id,
+      etitle: currentNote.title,
+      edescription: currentNote.description,
+      etag: currentNote.tag,
     });
   };
 
   const handleClick = (e) => {
     e.preventDefault();
-    editnote(note.id, note.etitle, note.edescription, note.etag);
-    refClose.current.click(); // ✅ Close the modal
+    editNote(note.id, note.etitle, note.edescription, note.etag);
+    refClose.current.click(); // Close modal
   };
 
   const onChange = (e) => {
@@ -124,16 +128,14 @@ function Notes() {
             </div>
 
             <div className="modal-footer">
-              {/* Bootstrap close */}
               <button
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
-                ref={refClose} // <-- move refClose here!
+                ref={refClose}
               >
                 Close
               </button>
-
               <button
                 type="button"
                 className="btn btn-success"
@@ -147,22 +149,18 @@ function Notes() {
       </div>
 
       {/* Notes Display */}
-<div className="row my-3 p-4  text-white rounded-3">
-  <h1 className="text-success mb-4">Your Notes</h1>
+      <div className="row my-3 p-4 text-white rounded-3">
+        <h1 className="text-success mb-4">Your Notes</h1>
 
-  {notes.length === 0 && (
-    <p className="text-muted">No notes to display</p>
-  )}
+        {Array.isArray(notes) && notes.length === 0 && (
+          <p className="text-muted">No notes to display</p>
+        )}
 
-  {notes.map((note) => (
-    <NoteItem
-      key={note._id}
-      updatenote={updatenote}
-      note={note}
-    />
-  ))}
-</div>
-
+        {Array.isArray(notes) &&
+          notes.map((note) => (
+            <NoteItem key={note._id} note={note} updatenote={updateNote} />
+          ))}
+      </div>
     </>
   );
 }
