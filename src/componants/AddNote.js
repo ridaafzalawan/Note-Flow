@@ -1,14 +1,29 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import noteContext from "../context/notes/NoteContext";
+import { useNavigate } from "react-router-dom";
 
 function AddNote() {
   const [note, setNote] = useState({ title: "", description: "", tag: "" });
   const context = useContext(noteContext);
   const { addnote } = context;
+  const navigate = useNavigate();
 
-  const handleClick = (e) => {
+  // 🔐 Redirect to login if not authenticated
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  const handleClick = async (e) => {
     e.preventDefault();
-    addnote(note.title, note.description, note.tag);
+
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+      return;
+    }
+
+    await addnote(note.title, note.description, note.tag);
     setNote({ title: "", description: "", tag: "" });
   };
 
@@ -22,16 +37,13 @@ function AddNote() {
         <div className="col-md-8 col-lg-6">
           <div className="card border-0 rounded-4 shadow-sm bg-success">
             <div className="card-body">
-              <h3 className="card-title text-center mb-4 text-dark h3 fw-bold">
+              <h3 className="card-title text-center mb-4 text-dark fw-bold">
                 ✍️ Add a New Note
               </h3>
 
               <form>
                 <div className="mb-3">
-                  <label
-                    htmlFor="title"
-                    className="form-label text-dark fw-bold"
-                  >
+                  <label htmlFor="title" className="form-label text-dark fw-bold">
                     Title
                   </label>
                   <input
@@ -42,14 +54,12 @@ function AddNote() {
                     value={note.title}
                     onChange={onChange}
                     placeholder="Enter note title"
+                    required
                   />
                 </div>
 
                 <div className="mb-3">
-                  <label
-                    htmlFor="description"
-                    className="form-label text-dark fw-bold"
-                  >
+                  <label htmlFor="description" className="form-label text-dark fw-bold">
                     Description
                   </label>
                   <textarea
@@ -60,6 +70,7 @@ function AddNote() {
                     onChange={onChange}
                     rows="3"
                     placeholder="Enter note description"
+                    required
                   />
                 </div>
 
@@ -83,9 +94,7 @@ function AddNote() {
                     type="submit"
                     className="btn btn-dark btn-lg"
                     onClick={handleClick}
-                    disabled={
-                      note.title.length < 6 || note.description.length < 10
-                    }
+                    disabled={note.title.length < 6 || note.description.length < 10}
                   >
                     + Add Note
                   </button>

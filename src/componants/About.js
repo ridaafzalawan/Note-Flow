@@ -173,7 +173,7 @@ const About = () => {
         <section className="text-center mt-5">
           <h4 className="text-success">Organize More. Remember Better. Stay Secure. 🌿</h4>
           <p className="text-muted mb-4">Start using Cloud Notes today — the easiest way to manage your thoughts with privacy and style.</p>
-          <a href="/register" className="btn btn-success btn-lg px-4">Get Started</a>
+          <a href="/signup" className="btn btn-success btn-lg px-4">Get Started</a>
         </section>
 
       </div>
