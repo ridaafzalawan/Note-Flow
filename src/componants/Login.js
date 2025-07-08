@@ -37,6 +37,7 @@ function Login() {
 
   return (
     <div className="container my-5">
+          <h2 className="text-success text-center p-3">Login</h2>
       <div className="row justify-content-center">
         <div className="col-md-8 col-lg-6">
           <div className="card border-0 rounded-4 shadow-sm bg-success">
